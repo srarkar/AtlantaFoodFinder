@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Finder</title>
+    {% load static %}
+    <link href="https://fonts.googleapis.com/css2?family=Chewy&display=swap" rel="stylesheet">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBc6vrJ5A4wgZ1llx01NgTwh7VsIdcvz3Q&libraries=places"></script>
+    <link rel="stylesheet" href="{% static 'myappp/css/map.css' %}" />
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        .container {
+            display: flex;
+            height: 100%;
+        }
+        #sidebar {
+            flex: 0 0 33%;
+            max-width: 33%;
+            padding: 20px;
+            background-color: #4CB27CFF;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+        #map {
+            flex: 1;
+            height: 100%;
+            position: relative;
+        }
+        .input-field {
+            width: 80%;
+            margin-bottom: 10px;
+            padding: 8px;
+            font-size: 14px;
+        }
+        #noResultsMessage {
+            color: red;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .icon-container {
+            display: flex;
+            margin-left: 10px;
+        }
+        .icon-container img {
+            margin-left: 10px;
+            width: 30px;
+            height: auto;
+        }
+        .overlay {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: #FF914CFF;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+        }
+        .overlay img {
+            margin-right: 5px;
+            width: 20px;
+            height: auto;
+        }
+        .search-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .label {
+            margin-bottom: 5px;
+            color: #FF914CFF;
+        }
+        .search-button {
+            background-color: #FF914CFF;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 20px;
+            margin-top: 10px;
+            width: 30%;
+            font-family: 'Chewy', cursive;
+        }
+        .search-button:hover {
+            background-color: rgba(255, 145, 76, 0.9);
+        }
+        #favoritesPanel {
+            display: none;
+            position: absolute;
+            top: 80px;
+            right: 20px;
+            background-color: #4CB27CFF;
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            width: 300px;
+            z-index: 1000;
+            overflow-y: auto;
+            max-height: 300px;
+        }
+        .favorite-item {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: rgba(255, 145, 76, 0.9);
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+        .remove-favorite {
+            cursor: pointer;
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+            margin-left: 10px;
+        }
+        .no-favorites {
+            text-align: center;
+            color: #ccc;
+        }
+        .add-favorite-button {
+            background-color: #FF914CFF;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 10px;
+            font-family: 'Chewy', cursive;
+        }
+        .add-favorite-button:hover {
+            background-color: rgba(255, 145, 76, 0.9);
+        }
+        .view-map-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 10px;
+            font-family: 'Chewy', cursive;
+        }
+        .view-map-button:hover {
+            background-color: rgba(76, 175, 80, 0.9);
+        }
+        .button-container {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .review-section {
+            margin-top: 15px;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
+        }
+        .review-section h4 {
+            margin: 0 0 10px;
+            font-size: 16px;
+        }
+        .review-section textarea {
+            width: 100%;
+            padding: 5px;
+            resize: none;
+            font-size: 14px;
+        }
+        .submit-review-button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 5px;
+            font-family: 'Chewy', cursive;
+        }
+        .submit-review-button:hover {
+            background-color: rgba(76, 175, 80, 0.9);
+        }
+        .review-item {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: rgba(255, 145, 76, 0.2);
+            border-radius: 5px;
+        }
+        .review-item p {
+            margin: 5px 0;
+        }
+        .review-item .review-author {
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="sidebar">
+            <div class="logo-container">
+                <a href="#" onclick="refreshPage()">
+                    <img src="{% static 'myappp/public/images/pizee.png' %}" alt="Pizee" class="logo" />
+                </a>
+                <a href="#" onclick="refreshPage()">
+                    <img src="{% static 'myappp/public/images/fatlanta.png' %}" alt="Fatlanta" class="logo">
+                </a>
+                <div class="icon-container">
+                    <a href="#" onclick="toggleFavorites()">
+                        <img src="{% static 'myappp/public/images/img_bookmark.svg' %}" alt="Bookmark" class="icon">
+                    </a>
+                </div>
+            </div>
+            <div class="overlay">
+                <img src="{% static 'myappp/public/images/img_log_out.svg' %}" alt="Log In" class="icon">
+                Sign In
+            </div>
+            <div class="search-container">
+                <label class="label" for="addressInput">Address:</label>
+                <input id="addressInput" type="text" class="input-field" placeholder="Enter address..." />
+
+                <label class="label" for="cuisineInput">Cuisine:</label>
+                <input id="cuisineInput" type="text" class="input-field" placeholder="Enter cuisine (optional)..." />
+
+                <label class="label" for="radiusInput">Radius (meters):</label>
+                <input id="radiusInput" type="number" class="input-field" placeholder="Enter radius..." />
+
+                <label class="label" for="ratingInput">Rating (0-5):</label>
+                <input id="ratingInput" type="number" class="input-field" step="0.1" min="0" max="5" placeholder="Enter minimum rating..." />
+
+                <button class="search-button" onclick="searchAddress()">Search</button>
+                <span id="noResultsMessage"></span>
+            </div>
+        </div>
+        <div id="map"></div>
+
+        <!-- Dropdown Panel for Favorites -->
+        <div id="favoritesPanel">
+            <h3>Your Favorite Restaurants</h3>
+            <div id="favoritesList"></div>
+        </div>
+    </div>
+
+    <script>
+        var map, infowindow, service, markers = [];
+        var favorites = JSON.parse(localStorage.getItem('favorites')) || {};
+
+        function initMap() {
+            const initialLocation = { lat: 33.7490, lng: -84.3880 }; // Atlanta coordinates
+            map = new google.maps.Map(document.getElementById("map"), {
+                center: initialLocation,
+                zoom: 14,
+            });
+            infowindow = new google.maps.InfoWindow();
+            service = new google.maps.places.PlacesService(map);
+        }
+
+        function searchAddress() {
+            const address = document.getElementById('addressInput').value;
+            const cuisine = document.getElementById('cuisineInput').value;
+            const radius = document.getElementById('radiusInput').value;
+            const rating = document.getElementById('ratingInput').value;
+
+            const request = {
+                query: address,
+                fields: ['name', 'geometry', 'place_id', 'rating', 'user_ratings_total'],
+            };
+
+            service.findPlaceFromQuery(request, function (results, status) {
+                if (status === google.maps.places.PlacesServiceStatus.OK) {
+                    clearMarkers();
+                    results.forEach(place => {
+                        createMarker(place);
+                    });
+                } else {
+                    document.getElementById('noResultsMessage').innerText = 'No results found.';
+                }
+            });
+        }
+
+        function createMarker(place) {
+            const marker = new google.maps.Marker({
+                map: map,
+                position: place.geometry.location,
+                title: place.name,
+            });
+
+            markers.push(marker);
+
+            google.maps.event.addListener(marker, 'click', function () {
+                infowindow.setContent(`<div><strong>${place.name}</strong><br>Rating: ${place.rating || 'N/A'}</div>`);
+                infowindow.open(map, marker);
+                loadReviews(place.place_id, place.reviews || []);
+            });
+
+            loadReviews(place.place_id, place.reviews || []);
+        }
+
+        function clearMarkers() {
+            markers.forEach(marker => marker.setMap(null));
+            markers = [];
+        }
+
+        function loadReviews(place_id, googleReviews = []) {
+            let reviews = JSON.parse(localStorage.getItem('reviews')) || {};
+            let reviewsDiv = document.getElementById('reviewsDiv');
+
+            if (!reviewsDiv) {
+                reviewsDiv = document.createElement('div');
+                reviewsDiv.id = 'reviewsDiv';
+                reviewsDiv.className = 'review-section';
+                infowindow.setContent(infowindow.getContent() + reviewsDiv.outerHTML);
+            }
+
+            reviewsDiv.innerHTML = '<h4>Reviews:</h4>'; // Clear existing content
+
+            // Display Google Reviews first
+            if (googleReviews && googleReviews.length > 0) {
+                googleReviews.forEach(function(review) {
+                    let reviewItem = document.createElement('div');
+                    reviewItem.className = 'review-item';
+                    reviewItem.innerHTML = `
+                        <p><strong>Rating:</strong> ${review.rating}</p>
+                        <p><strong>Review:</strong> ${review.text}</p>
+                        <p><strong>Author:</strong> ${review.author_name}</p>
+                        <p><em>${new Date(review.time * 1000).toLocaleString()}</em></p>
+                    `;
+                    reviewsDiv.appendChild(reviewItem);
+                });
+            }
+
+            // Display locally stored reviews
+            if (reviews[place_id] && reviews[place_id].length > 0) {
+                reviews[place_id].forEach(function(review) {
+                    let reviewItem = document.createElement('div');
+                    reviewItem.className = 'review-item';
+                    reviewItem.innerHTML = `
+                        <p><strong>Rating:</strong> ${review.rating}</p>
+                        <p><strong>Review:</strong> ${review.review}</p>
+                        <p><em>${new Date(review.date).toLocaleString()}</em></p>
+                    `;
+                    reviewsDiv.appendChild(reviewItem);
+                });
+            } else {
+                reviewsDiv.innerHTML += '<p>No reviews yet. Be the first to review!</p>';
+            }
+
+            // Add review submission section
+            const reviewInput = document.createElement('textarea');
+            reviewInput.id = 'reviewInput';
+            reviewInput.placeholder = 'Write your review...';
+            reviewInput.rows = 3;
+
+            const ratingInput = document.createElement('input');
+            ratingInput.id = 'ratingInputReview';
+            ratingInput.type = 'number';
+            ratingInput.placeholder = 'Rating (0-5)';
+            ratingInput.step = '0.1';
+            ratingInput.min = '0';
+            ratingInput.max = '5';
+
+            const submitReviewButton = document.createElement('button');
+            submitReviewButton.className = 'submit-review-button';
+            submitReviewButton.innerText = 'Submit Review';
+            submitReviewButton.onclick = function() {
+                submitReview(place_id);
+            };
+
+            reviewsDiv.appendChild(reviewInput);
+            reviewsDiv.appendChild(ratingInput);
+            reviewsDiv.appendChild(submitReviewButton);
+            infowindow.setContent(infowindow.getContent() + reviewsDiv.outerHTML);
+        }
+
+        function submitReview(place_id) {
+            const reviewInput = document.getElementById('reviewInput').value;
+            const ratingInput = document.getElementById('ratingInputReview').value;
+
+            if (!reviewInput || !ratingInput) {
+                alert('Please enter both a review and a rating.');
+                return;
+            }
+
+            let reviews = JSON.parse(localStorage.getItem('reviews')) || {};
+            if (!reviews[place_id]) {
+                reviews[place_id] = [];
+            }
+
+            reviews[place_id].push({
+                review: reviewInput,
+                rating: parseFloat(ratingInput),
+                date: new Date().toISOString(),
+            });
+
+            localStorage.setItem('reviews', JSON.stringify(reviews));
+            alert('Review submitted successfully!');
+
+            // Clear input fields
+            document.getElementById('reviewInput').value = '';
+            document.getElementById('ratingInputReview').value = '';
+
+            // Load all reviews after submission
+            loadReviews(place_id); // Refresh the reviews display
+        }
+
+        function toggleFavorites() {
+            const favoritesPanel = document.getElementById('favoritesPanel');
+            favoritesPanel.style.display = favoritesPanel.style.display === 'block' ? 'none' : 'block';
+            loadFavorites();
+        }
+
+        function loadFavorites() {
+            const favoritesList = document.getElementById('favoritesList');
+            favoritesList.innerHTML = ''; // Clear existing content
+
+            if (Object.keys(favorites).length === 0) {
+                favoritesList.innerHTML = '<p class="no-favorites">No favorites added yet.</p>';
+                return;
+            }
+
+            Object.keys(favorites).forEach(place_id => {
+                const favorite = favorites[place_id];
+                const favoriteItem = document.createElement('div');
+                favoriteItem.className = 'favorite-item';
+                favoriteItem.innerHTML = `
+                    <strong>${favorite.name}</strong>
+                    <div class="button-container">
+                        <button class="view-map-button" onclick="viewFavorite('${place_id}')">View on Map</button>
+                        <span class="remove-favorite" onclick="removeFavorite('${place_id}')">✖</span>
+                    </div>
+                `;
+                favoritesList.appendChild(favoriteItem);
+            });
+        }
+
+        function viewFavorite(place_id) {
+            const favorite = favorites[place_id];
+            if (favorite) {
+                clearMarkers();
+                const position = { lat: favorite.lat, lng: favorite.lng };
+                map.setCenter(position);
+                map.setZoom(15);
+                const marker = new google.maps.Marker({
+                    map: map,
+                    position: position,
+                    title: favorite.name,
+                });
+                markers.push(marker);
+                infowindow.setContent(`<div><strong>${favorite.name}</strong><br>Rating: ${favorite.rating || 'N/A'}</div>`);
+                infowindow.open(map, marker);
+                loadReviews(place_id, favorite.reviews || []);
+            }
+        }
+
+        function removeFavorite(place_id) {
+            delete favorites[place_id];
+            localStorage.setItem('favorites', JSON.stringify(favorites));
+            loadFavorites();
+        }
+
+        function refreshPage() {
+            window.location.reload();
+        }
+
+        window.onload = initMap;
+    </script>
+</body>
+</html>

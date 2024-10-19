@@ -6,7 +6,6 @@
     <title>Restaurant Finder</title>
     {% load static %}
     <link href="https://fonts.googleapis.com/css2?family=Chewy&display=swap" rel="stylesheet">
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBc6vrJ5A4wgZ1llx01NgTwh7VsIdcvz3Q&libraries=places"></script>
     <link rel="stylesheet" href="{% static 'myappp/css/map.css' %}" />
     <style>
         html, body {

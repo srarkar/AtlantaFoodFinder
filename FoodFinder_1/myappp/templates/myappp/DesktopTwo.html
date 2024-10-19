@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    {% load static %}
+    <meta charset="utf-8" />
+    <title>Desktop - 2</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="Web site created using create-react-app" />
+    <img
+      alt="Logo"
+      src="https://appproject.dhiwise.com/dhiwise-logo.png?c=&v="
+      style="width: 0px; height: 0px; display: none"
+    />
+    <link rel="stylesheet" type="text/css" href="{% static 'myappp/css2/index2.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'myappp/css2/font2.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'myappp/css2/styles2.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'myappp/css2/components2.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'myappp/css2/DesktopTwo.css' %}" />
+    <script>
+      function refreshPage() {
+        window.location.reload();
+      }
+    </script>
+  </head>
+  <body>
+    <div class="desktop-two">
+      <div class="rowlogintoyour">
+        <div class="columnpizee2one">
+          <div class="rowpizee2one">
+            <!-- Pizee logo as refresh button -->
+            <img src="{% static 'myappp/public/images/pizee.png' %}" alt="Pizee 2 1" class="logo" style="width: 60px; height: auto; cursor: pointer;" onclick="refreshPage()" />
+            <!-- FATlanta word logo as refresh button -->
+            <p class="fatlanta ui text size-texts" style="cursor: pointer;" onclick="refreshPage()">FATlanta</p>
+          </div>
+          <h1 class="logintoyour ui heading size-headingmd">Login to your account</h1>
+          <div class="columnemail">
+            <label class="email">
+              <img src="{% static 'myappp/public/images/img_mail.svg' %}" alt="Mail" class="mail" />
+              <input name="email" placeholder="Email" type="email" />
+            </label>
+            <label class="password">
+              <img src="{% static 'myappp/public/images/img_search.svg' %}" alt="Search" class="mail" />
+              <input name="password" placeholder="Password" type="password" />
+            </label>
+            <a href="/myappp/forgot-password" class="forgotpassword-link">
+              <p class="ui text size-textxs">Forgot password?</p>
+            </a>
+            <button class="flex-row-center-center log_in">Log in</button>
+          </div>
+        </div>
+        <div class="stackcreateacco">
+          <div class="rownewhere">
+            <div class="column">
+              <div class="rowcreateaccoun">
+                <img src="{% static 'myappp/public/images/img_rectangle_3.png' %}" alt="Image" class="image" />
+                <div class="columncreateacc">
+                  <a href="#" class="createaccount-link">
+                    <h2 class="createaccount ui heading size-headings">Create Account</h2>
+                  </a>
+                  <div class="columnsecurity">
+                    <label class="email-1">
+                      <img src="{% static 'myappp/public/images/img_mail.svg' %}" alt="Mail" class="mail" />
+                      <input name="email" placeholder="Email" type="email" />
+                    </label>
+                    <label class="email-1">
+                      <img src="{% static 'myappp/public/images/img_mail.svg' %}" alt="Mail" class="mail" />
+                      <input name="email" placeholder="Confirm Email" type="email" />
+                    </label>
+                    <label class="email-1">
+                      <img src="{% static 'myappp/public/images/img_shield.svg' %}" alt="Shield" class="mail" />
+                      <input name="security_one" placeholder="Security Question #1" type="text" />
+                      <img src="{% static 'myappp/public/images/img_settings.svg' %}" alt="Settings" class="settings" />
+                    </label>
+                    <label class="email-1">
+                      <img src="{% static 'myappp/public/images/img_lock.svg' %}" alt="Lock" class="mail" />
+                      <input name="lock" placeholder="Answer #1" type="text" />
+                    </label>
+                    <div class="security">
+                      <div class="rowshield_three">
+                        <img src="{% static 'myappp/public/images/img_shield.svg' %}" alt="Shield" class="shield_three" />
+                        <h3 class="security_three ui heading size-headingxs">Security Question #2</h3>
+                      </div>
+                      <img src="{% static 'myappp/public/images/img_settings.svg' %}" alt="Settings" class="settings_three" />
+                    </div>
+                    <label class="email-1">
+                      <img src="{% static 'myappp/public/images/img_lock.svg' %}" alt="Lock" class="mail" />
+                      <input name="lock_one" placeholder="Answer #2" type="text" />
+                    </label>
+                    <div class="security">
+                      <div class="rowshield_three">
+                        <img src="{% static 'myappp/public/images/img_shield.svg' %}" alt="Shield" class="shield_three" />
+                        <h4 class="security_three ui heading size-headingxs">Security Question #3</h4>
+                      </div>
+                      <img src="{% static 'myappp/public/images/img_settings.svg' %}" alt="Settings" class="settings_three" />
+                    </div>
+                    <label class="email-1">
+                      <img src="{% static 'myappp/public/images/img_lock.svg' %}" alt="Lock" class="mail" />
+                      <input name="lock_two" placeholder="Answer #3" type="text" />
+                    </label>
+                    <label class="email-1">
+                      <img src="{% static 'myappp/public/images/img_search.svg' %}" alt="Search" class="mail" />
+                      <input name="password" placeholder="Password" type="password" />
+                    </label>
+                    <label class="email-1">
+                      <img src="{% static 'myappp/public/images/img_search.svg' %}" alt="Search" class="mail" />
+                      <input name="confirmpassword" placeholder="Confirm Password" type="password" />
+                    </label>
+                    <button class="flex-row-center-center sign_up">Sign up</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <h5 class="newhere ui heading size-headingmd">New here?</h5>
+          </div>
+          <div class="rowview">
+            <div class="view"></div>
+            <img src="{% static 'myappp/public/images/img_rectangle_3.png' %}" alt="Image" class="image_one" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,29 @@
+{
+  "short_name": "Desktop Apps",
+  "name": "Desktop Applications",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff",
+  "apps": [
+    {
+      "short_name": "Desktop - 1",
+      "name": "Desktop - 1"
+    },
+    {
+      "short_name": "Desktop - 2",
+      "name": "Desktop - 2"
+    },
+    {
+      "short_name": "Desktop - 3",
+      "name": "Desktop - 3"
+    }
+  ]
+}
